@@ -1,0 +1,110 @@
+.logo-img{
+    width: 200px;
+    display: block;
+    margin: 50px auto 50px auto;
+}
+
+.layout-container{
+    width: 100%;
+    min-height: 500px;
+    background-color: rgb(253 28 26 / 58%);
+    /* border: #0adf98; */
+    border: #558f21 2px solid;
+    border-radius: 10px;
+    margin-bottom: 50px;
+}
+
+#victim_container a{
+    text-decoration: none;
+}
+
+.victim-card{
+    margin: 30px 20px 20px 20px;
+    background-color: rgba(0, 0, 0, 0.60);
+}
+
+.victim-card:hover{
+    margin: 30px 20px 20px 20px;
+    background-color: rgba(0, 0, 0, 0.80);
+}
+
+.v-info{
+    color: #72ef0e;
+    padding: 20px 10px 10px 15px;
+}
+
+.header{
+    background-color: #000000b8;
+    height: 50px;
+    width: 100%;
+    border-radius: 8px 8px 0px 0px;
+    text-align: center;
+    padding-top: 8px;
+}
+
+.header > h4{
+    color: #72ef0e;
+}
+
+.victim-info{
+    min-height: 100px;
+    background-color: #000000b8;
+    border-radius: 8px;
+    margin: 50px;
+    color: #72ef0e;
+    padding: 30px;
+}
+
+.info-heading{
+    font-weight: bold;
+}
+
+.info-data{
+    font-weight: normal;
+}
+
+.victim-command{
+    background-color: #000000b8;
+    border-radius: 8px;
+    margin: 0px 50px 20px 50px;
+    color: #72ef0e;
+    padding: 30px;
+}
+
+.victim-keylogs{
+    background-color: #000000b8;
+    border-radius: 8px;
+    margin: 0px 50px 20px 50px;
+    color: #72ef0e;
+    padding: 30px;
+    min-height: 400px;
+    max-height: 800px;
+    overflow-y: auto;
+}
+
+.button{
+    background-color: #72ef0e;
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.button:hover{
+    background-color:#65b923;;
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.keylogs{
+    background-color: rgb(253 28 26 / 25%);
+    padding: 10PX;
+    border-radius: 10PX;
+    overflow-y: auto;
+}
+
+.img-logs{
+    width: 40%;
+}
