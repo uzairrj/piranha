@@ -75,5 +75,4 @@ async def getVictimUIID(UUID:str,response:Response):
     if(len(victims) == 0):
         response.status_code = status.HTTP_404_NOT_FOUND
         return None
-    print(type(victims))
     return {"data": victims, "size":len(victims)}
