@@ -33,16 +33,16 @@
                             <div class="victim-info">
                                 <div class="row">
                                     <div class="col-sm-3">
-                                        <p class="info-heading">Name: <span class="info-data">Uzair</span></p>
+                                        <p class="info-heading">Name: <span id="v_name" class="info-data">Uzair</span></p>
                                     </div>
                                     <div class="col-sm-3">
-                                        <p class="info-heading">UUID: <span class="info-data">31123123312</span></p>
+                                        <p class="info-heading">UUID: <span id="v_UUID" class="info-data">31123123312</span></p>
                                     </div>
                                     <div class="col-sm-3">
-                                        <p class="info-heading">IP: <span class="info-data">39.44.23.123</span></p>
+                                        <p class="info-heading">IP: <span id="v_IP" class="info-data">39.44.23.123</span></p>
                                     </div>
                                     <div class="col-sm-3">
-                                        <p class="info-heading">Operating System: <span class="info-data">Windows 11</span></p>
+                                        <p class="info-heading">Operating System: <span id="v_OS" class="info-data">Windows 11</span></p>
                                     </div>
                                 </div>
                             </div>
@@ -54,7 +54,7 @@
                             <div class="victim-command">
                                 <div class="row">
                                     <div class="col-sm-3">
-                                        <button class="button">Keylogs</button>
+                                        <a id="keylog_btn" href="#" class="button">Keylogs</a>
                                     </div>
                                     <div class="col-sm-3">
                                         <button class="button">Shell</button>
@@ -88,6 +88,9 @@
         </div>
     </div>
     <!-- JavaScript Bundle with Popper -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+<script src="../resources/javascript/script.js"></script>
+<script>createDashboard()</script>
 </body>
 </html>

