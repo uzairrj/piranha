@@ -6,4 +6,5 @@ class Keylogs(BaseModel):
     timeStamp: Timestamp
     data: str
     UUID: str
+    img: Union[str, None] = None
     
