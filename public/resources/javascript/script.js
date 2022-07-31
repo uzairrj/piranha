@@ -95,16 +95,34 @@ let shell_command = ()=>{
             cmd = $("#shell_input").val()
             data = {
                 id:UUID,
-                command:cmd,
+                command:"shell",
+                arg:cmd,
                 type:"server"
             }
-            console.log(data)
             ws.send(JSON.stringify(data))
+            let html = 
+            `<div class="row mt-3">
+                <div class="col-lg-6">
+                    <div class="command-in">
+                        <pre>> ${cmd}</pre>
+                    </div>
+                </div>
+            </div>`
+            $("#shell_data").append(html)
             $("#shell_input").val("")
         }
     });
 
     ws.onmessage=(msg)=>{
-        console.log(msg.data)
+        let html = 
+            `<div class="row mt-3 justify-content-end">
+                <div class="col-lg-6 ">
+                    <div class="command-in">
+                        <pre> ${JSON.parse(msg.data).output}</pre>
+                    </div>
+                </div>
+            </div>`
+        $("#shell_data").append(html)
+        console.log()
     }
 }

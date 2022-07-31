@@ -129,6 +129,10 @@
     overflow-y: auto;
 }
 
+.keylogs pre {
+    white-space: break-spaces;
+}
+
 .outputs{
     background-color: rgb(253 28 26 / 25%);
     padding: 10PX;
@@ -142,4 +146,17 @@
 
 .img-logs{
     width: 40%;
+}
+
+.command-in {
+    padding: 7px 7px;
+    background: #046004b8;
+    border-radius: 7px;
+    /* max-width: 48%; */
+}
+
+.command-in > pre{
+    margin: 0px;
+    white-space: pre-wrap;
+    color: white;
 }
